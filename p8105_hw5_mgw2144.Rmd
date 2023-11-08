@@ -3,3 +3,43 @@ title: "p8105_hw5_mgw2144"
 output: github_document
 date: "2023-11-08"
 ---
+
+```{r}
+library(tidyverse)
+library(rvest)
+```
+
+# Problem 1 
+
+
+# Problem 2
+## Reading the data 
+
+```{r}
+  
+study_list = 
+  list.files('data/study_data')
+
+study_df = 
+  as.data.frame(study_list)
+
+```
+## Iterate over file names and read in data for each subject using purrr::map and saving the result as a new variable in the dataframe
+
+```{r}
+file_path = "data/study_data"
+
+study_df = 
+  map_df(study_list, function(study_list) {
+    
+    study_file_path = file.path(file_path, study_list)
+    
+    data = read_csv(study_file_path)
+    
+    data
+  })
+
+```
+
+
+# Problem 3 
