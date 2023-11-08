@@ -4,7 +4,7 @@ output: github_document
 date: "2023-11-08"
 ---
 
-```{r}
+```{r message=FALSE}
 library(tidyverse)
 library(rvest)
 ```
@@ -13,33 +13,18 @@ library(rvest)
 
 
 # Problem 2
-## Reading the data 
+## Reading the data and creating a dataframe with the map function
 
-```{r}
-  
-study_list = 
-  list.files('data/study_data')
-
-study_df = 
-  as.data.frame(study_list)
-
+```{r message=FALSE, warning=FALSE}
+study_data = 
+  tibble(
+    files = list.files('data/study_data'),
+    path = str_c("data/study_data/", files)
+  ) %>% 
+  mutate(data = map(path, read_csv)) %>% 
+  unnest() 
 ```
-## Iterate over file names and read in data for each subject using purrr::map and saving the result as a new variable in the dataframe
-
-```{r}
-file_path = "data/study_data"
-
-study_df = 
-  map_df(study_list, function(study_list) {
-    
-    study_file_path = file.path(file_path, study_list)
-    
-    data = read_csv(study_file_path)
-    
-    data
-  })
-
-```
+## Tidy the result; manipulate file names to include control arm and subject ID, make sure weekly observations are “tidy”, and do any other tidying that’s necessary
 
 
 # Problem 3 
