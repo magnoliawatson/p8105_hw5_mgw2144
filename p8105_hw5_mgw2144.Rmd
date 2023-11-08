@@ -24,7 +24,26 @@ study_data =
   mutate(data = map(path, read_csv)) %>% 
   unnest() 
 ```
-## Tidy the result; manipulate file names to include control arm and subject ID, make sure weekly observations are “tidy”, and do any other tidying that’s necessary
 
+## Tidying the data
+
+```{r}
+
+study_data_tidy = 
+  study_data %>% 
+  separate(files, into = c("control_arm", "subject_ID", "csv")) %>% 
+  mutate(
+    control_arm = ifelse(control_arm == "con", "control", control_arm),
+    control_arm = ifelse(control_arm == "exp", "experimental", control_arm)
+  ) %>% 
+  pivot_longer(
+    cols = starts_with("week"),
+    names_prefix = "week_",
+    names_to = "week",
+    values_to = "observation"
+  ) %>% 
+  select(control_arm, subject_ID, week, observation)
+
+```
 
 # Problem 3 
