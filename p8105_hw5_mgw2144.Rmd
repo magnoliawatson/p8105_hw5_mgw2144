@@ -63,8 +63,6 @@ study_data_tidy =
 
 ## Plotting the tidy data 
 
-## Make a spaghetti plot showing observations on each subject over time, and comment on differences between groups.
-
 ```{r}
 
 study_plot = 
@@ -83,6 +81,6 @@ study_plot
 
 ```
 
-
+The control arm appears to have observations steadily between the range of approximately -2.3 and 4.3 for all 8 weeks and for all 10 subjects with the lowest observation value seen in week 6 for subject 5 and the highest observation value seen in week 5 for subject 10. The experimental arm shows a steady positive/increasing trend for the observations values in all subjects across the 8 week period. The lowest observation value for the experimental arm was in subject 1 in week 1, and the highest observational value was in week 9 for subject 5. This indicates a positive relationship between observation value and week (time) in the experimental arm that we do not see in the control arm. 
 
 # Problem 3 
