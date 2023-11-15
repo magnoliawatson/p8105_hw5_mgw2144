@@ -87,23 +87,70 @@ The control arm appears to have observations steadily between the range of appro
 
 ## Creating function and map
 ```{r}
-
 sim_function = function(n = 30, mu_val = c(0, 1, 2, 3, 4, 5, 6), sigma = 5, alpha = 0.05, num_datasets = 5000) {
   
-   datasets = replicate(num_datasets, rnorm(n, mean = 0, sd = sigma), simplify = FALSE)
-   
-   
-   results = map_df(mu_val, function(mu) {
+  datasets = replicate(num_datasets, rnorm(n, mean = 0, sd = sigma), simplify = FALSE)
+  
+  results = map_df(mu_val, function(mu) {
     map_df(datasets, function(dataset) {
       t_test_result = t.test(dataset, mu = mu)
       tidy_results = broom::tidy(t_test_result)
-      data.frame(mu = mu, mu_hat = tidy_results$estimate, p_value = tidy_results$p.value)
+      data.frame(mu = mu, mu_est = tidy_results$estimate, p_value = tidy_results$p.value)
     })
   })
-
+  
   return(results)
-  }
+}
 
 result_df = sim_function()
 
 ```
+
+## Plot 1: Power vs. True Mean 
+
+```{r}
+plot_1_df =
+  result_df %>%
+  group_by(mu) %>%
+  summarise(power = mean(p_value < 0.05))
+
+plot_1=
+ggplot(plot_1_df, aes(x = mu, y = power)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    x = "True mu value",
+    y = "Power of the Test",
+    title = "Association between effect size and power"
+  )
+
+plot_1
+```
+
+
+The graph of the association between effect size and power shows us that as the true mean or mu value increases, power also increases. There appears to be a strong positive association between effect size and power.
+
+
+## Plot 2: Average estimate of mu hat compared to true mu value 
+
+```{r}
+plot_2_df =
+result_df %>%
+  group_by(mu) %>%
+  summarise(avg_mu_hat = mean(mu_est))
+  
+plot_2 = 
+  plot_2_df %>% 
+  ggplot(aes(x = mu, y = avg_mu_hat)) +
+  geom_point()+
+  geom_smooth()+
+  labs(
+    title = "Average estiamte of mu hat vs. the true mu value",
+    x = "True mu value",
+    y = "Estimated mu value"
+  )
+
+plot_2
+
+```
+
