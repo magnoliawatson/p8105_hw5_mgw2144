@@ -129,7 +129,7 @@ plot_1
 ```
 
 
-The graph of the association between effect size and power shows us that as the true mean or mu value increases, power also increases. There appears to be a strong positive association between effect size and power.
+There appears to be a non-linear association between effect size and power based on the graph. Each time that we run the simulated data the graph appears different, with a non-linear association each time. 
 
 
 ## Plot 2: Average estimate of mu hat compared to true mu value 
@@ -155,6 +155,8 @@ plot_2
 
 ```
 
+There is a very strong positive linear relationship between the true mu values and the average estimated mu values created from the simulation. This makes sense as when we run a higher number of samples, our average estimated means will mimic the true mean value. 
+
 ## Plot 3: Avergate estimate of mu in samples where the null is rejected compared to the true mean value
 
 ```{r}
@@ -165,10 +167,11 @@ plot_3_df =
   summarise(avg_mu_hat_rej = mean(mu_est))
 
 plot_3 =
-  plot_3_df %>%
-  ggplot(aes(x = mu, y = avg_mu_hat_rej)) +
-  geom_line(color = "pink") +
-  geom_point(color = "pink") +
+  ggplot() +
+  geom_line(data = plot_2_df, aes(x = mu, y = avg_mu_hat), color = "green")+
+  geom_point(data = plot_2_df, aes(x = mu, y = avg_mu_hat), color = "green")+
+  geom_line(data = plot_3_df, aes(x = mu, y = avg_mu_hat_rej), color = "blue") +
+  geom_point(data = plot_3_df, aes(x = mu, y = avg_mu_hat_rej), color = "blue") +
   labs(
     x = "True value of mu",
     y = "Average estimate of mu",
@@ -177,4 +180,5 @@ plot_3 =
 
 plot_3
 ```
-
+ 
+The sample average of mu hat across tests for which the null is rejected is approximately equal to the true value of mu. As we run more samples, the average values of the estimated mus more closely approximates the true mu values. The differences seen in the graph is due to random sampling variability in the results.
